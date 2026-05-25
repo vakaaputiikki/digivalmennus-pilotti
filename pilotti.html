@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vakauttava digivalmennus — Pilotti 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --earth: #3d2f1f;
+    --bark: #6b4c2e;
+    --sand: #f0e8d8;
+    --sand-light: #f8f3ea;
+    --moss: #4a5c3a;
+    --sage: #7a9165;
+    --stone: #c4b89a;
+    --warm-white: #fdfaf4;
+    --text: #2a1f12;
+    --text-muted: #7a6a55;
+    --accent: #8b6340;
+    --border: #e0d4be;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    background: var(--earth);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(106,76,46,0.5) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(74,92,58,0.2) 0%, transparent 60%);
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(240,232,216,0.12);
+    border: 1px solid rgba(240,232,216,0.25);
+    color: var(--stone);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-bottom: 2.5rem;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    color: var(--sand-light);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--stone);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    color: rgba(240,232,216,0.7);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--sand);
+    color: var(--earth);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 16px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+
+  .hero-scroll span {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240,232,216,0.35);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(240,232,216,0.3), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── PILOTTIINFO ── */
+  .pilotti-strip {
+    background: var(--moss);
+    padding: 1.25rem 2rem;
+    text-align: center;
+  }
+
+  .pilotti-strip p {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(248,243,234,0.85);
+    letter-spacing: 0.03em;
+  }
+
+  .pilotti-strip strong {
+    color: var(--sand-light);
+    font-weight: 500;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 2rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    color: var(--earth);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--bark); }
+
+  .section-body {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .section-body p + p { margin-top: 1rem; }
+
+  /* ── JAKO ── */
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* ── MITÄ SAA ── */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .benefit-card {
+    background: var(--sand-light);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .benefit-icon {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .benefit-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--earth);
+    margin-bottom: 0.5rem;
+  }
+
+  .benefit-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── VIIKOT ── */
+  .weeks-list {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .week-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .week-row:first-child { border-top: 1px solid var(--border); }
+
+  .week-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--stone);
+    min-width: 32px;
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .week-info { flex: 1; }
+
+  .week-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--earth);
+    margin-bottom: 2px;
+  }
+
+  .week-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── HINTA ── */
+  .hinta-box {
+    background: var(--earth);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hinta-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(74,92,58,0.3) 0%, transparent 70%);
+  }
+
+  .hinta-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .hinta-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    font-weight: 300;
+    color: var(--sand-light);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+
+  .hinta-orig {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--stone);
+    text-decoration: line-through;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .hinta-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(240,232,216,0.65);
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+
+  .paikat-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(240,232,216,0.1);
+    border: 1px solid rgba(240,232,216,0.2);
+    border-radius: 50px;
+    padding: 8px 20px;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .paikat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #7fc97f;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .paikat-text {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--stone);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── LOMAKE ── */
+  .form-section {
+    background: var(--sand-light);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-top: 3rem;
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--earth);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bark);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--bark);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .checkbox-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 0.5rem;
+  }
+
+  .checkbox-wrap input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--moss);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+
+  .checkbox-wrap label {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.6;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .btn-submit {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: var(--earth);
+    color: var(--sand-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-submit:hover {
+    background: var(--bark);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .form-note {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+
+  .form-sent {
+    display: none;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .form-sent.visible { display: block; }
+
+  .form-sent h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--earth);
+    margin-bottom: 0.75rem;
+  }
+
+  .form-sent p {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── MINUSTA ── */
+  .about-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .about-img-wrap {
+    aspect-ratio: 3/4;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--sand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-img-placeholder {
+    font-size: 3rem;
+    opacity: 0.3;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--earth);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  footer p {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(240,232,216,0.4);
+  }
+
+  footer a {
+    color: rgba(240,232,216,0.6);
+    text-decoration: none;
+  }
+
+  /* ── ANIMAATIOT ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  /* ── MOBIILI ── */
+  @media (max-width: 600px) {
+    section { padding: 4rem 1.5rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-section { padding: 2rem 1.5rem; }
+    .hinta-box { padding: 2.5rem 1.5rem; }
+    .about-section { grid-template-columns: 1fr; }
+    .about-img-wrap { aspect-ratio: 1/1; max-width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Pilotti · Kesäkuu 2026</div>
+  <h1 class="hero-title">Vakauttava<br><em>digivalmennus</em></h1>
+  <p class="hero-sub">8 viikkoa. Opit tunnistamaan oman hermostosi kielen ja säätelemään vireystilaasi arjessa — konkreettisesti, kehon kautta.</p>
+  <a href="#ilmoittaudu" class="hero-cta">Ilmoittaudu pilottiin →</a>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Lue lisää</span>
+  </div>
+</section>
+
+<!-- PILOTTISTRIP -->
+<div class="pilotti-strip">
+  <p><strong>Pilottihinta 97 €</strong> — normaalihinta 197 €. Vain <strong>10 paikkaa.</strong> Avautuu 1.6.2026.</p>
+</div>
+
+<!-- MITEN TOIMII -->
+<section style="background:var(--sand-light);border-radius:24px;padding:3rem;margin:0 auto;max-width:860px;">
+  <p class="section-label">Miten valmennus toimii</p>
+  <h2 class="section-title" style="margin-bottom:1.5rem;">Kaikki tapahtuu <em>netissä — omaan tahtiin</em></h2>
+  <div class="section-body" style="margin-bottom:2rem;">
+    <p>Vakauttava digivalmennus ei sisällä live-tapaamisia eikä ryhmäsessioita. Et tapaa minua kasvokkain — valmennus tehdään kokonaan itsenäisesti, sinulle sopivana aikana, siellä missä olet.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+    <div style="background:var(--warm-white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">📖</div>
+      <div style="font-size:14px;font-weight:500;color:var(--earth);margin-bottom:0.4rem;">Lue</div>
+      <div style="font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.6;">Kirjallinen materiaali joka viikolla — luet omaan tahtiisi</div>
+    </div>
+    <div style="background:var(--warm-white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">🎧</div>
+      <div style="font-size:14px;font-weight:500;color:var(--earth);margin-bottom:0.4rem;">Kuuntele</div>
+      <div style="font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.6;">10 min äänite syventää viikon teemaa — kuuntelet milloin sopii</div>
+    </div>
+    <div style="background:var(--warm-white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">🧭</div>
+      <div style="font-size:14px;font-weight:500;color:var(--earth);margin-bottom:0.4rem;">Harjoittele</div>
+      <div style="font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.6;">Vireyskompassissa ohjatut harjoitteet arjessa käytettäväksi</div>
+    </div>
+    <div style="background:var(--warm-white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">✉️</div>
+      <div style="font-size:14px;font-weight:500;color:var(--earth);margin-bottom:0.4rem;">Viesti</div>
+      <div style="font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.6;">3 viestiä per viikko minulle — et ole yksin, vaikka eteneminen on itsenäistä</div>
+    </div>
+  </div>
+  <p style="font-size:13px;font-weight:300;color:var(--text-muted);margin-top:1.5rem;line-height:1.6;border-top:1px solid var(--border);padding-top:1.25rem;">Yhteensä 24 viestiä koko valmennuksen aikana. Ei live-tapaamisia, ei aikatauluja joihin pitää sopia — mutta et myöskään täysin yksin.</p>
+</section>
+
+<!-- KENELLE -->
+<section>
+  <p class="section-label">Kenelle</p>
+  <h2 class="section-title">Tunnistatko <em>tämän?</em></h2>
+  <div class="section-body">
+    <p>Tiedät, että stressi näkyy kehossa — mutta et osaa lukea sen viestejä ennen kuin ne ovat jo huutoa. Illat menevät sohvalla puhelimen kanssa, mutta et oikeasti lepää. Joskus jaksat paljon, joskus et jaksa mitään — ja et aina tiedä miksi.</p>
+    <p>Tämä valmennus sopii sinulle, jos olet vasta aloittamassa matkaa oman hermostosi kanssa. Ei tarvita aiempaa tietoa vireystiloista tai kehollisesta työskentelystä — valmennus rakentaa sen perustan alusta asti.</p>
+    <p>Tavoite on selkeä: opit tunnistamaan omat vireystilasi ja säätelemään niitä niin, että oma toimijuutesi vahvistuu. Ei ulkoa opettelemalla — vaan tekemällä ja huomaamalla.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-top:2rem;">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="color:var(--moss);font-size:1.1rem;margin-top:2px;">✓</span>
+      <span style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.6;">Et tunnista omia vireystilojasi tai et tiedä miten säädellä niitä</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="color:var(--moss);font-size:1.1rem;margin-top:2px;">✓</span>
+      <span style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.6;">Haluat konkreettisia työkaluja — et pelkkää teoriaa</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="color:var(--moss);font-size:1.1rem;margin-top:2px;">✓</span>
+      <span style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.6;">Haluat vahvistaa omaa toimijuuttasi ja kykyä vaikuttaa omaan olotilaasi</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="color:var(--moss);font-size:1.1rem;margin-top:2px;">✓</span>
+      <span style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.6;">Teet asiat mieluummin omaan tahtiin, omassa arjessasi</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MITÄ SAA -->
+<section>
+  <p class="section-label">Sisältö</p>
+  <h2 class="section-title">Mitä saat <em>kahdeksassa viikossa</em></h2>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">🧠</div>
+      <div class="benefit-title">Kirjallinen materiaali</div>
+      <div class="benefit-text">Joka viikolla selkeä, helppolukuinen materiaali viikon teemasta. Teoria tiivistettynä — ei yliselitettyä.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🎧</div>
+      <div class="benefit-title">Äänite joka viikko</div>
+      <div class="benefit-text">10 minuutin äänite syventää viikon teemaa. Voit kuunnella siellä missä olet.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🧭</div>
+      <div class="benefit-title">Vireyskompassi</div>
+      <div class="benefit-text">Teet oirekartoituksen, joka johtaa arvioituun vireystilaasi. Saat siihen sopivat harjoitteet — ääninä ja videoina. Vireysjana näyttää viikkojen ajan, missä tiloissa olet liikkunut.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">✉️</div>
+      <div class="benefit-title">Henkilökohtainen ohjaus</div>
+      <div class="benefit-text">24 viestiä valmentajalle koko valmennuksen ajan. Et ole yksin prosessissa.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VIIKOT -->
+<section>
+  <p class="section-label">Ohjelma</p>
+  <h2 class="section-title">8 viikkoa, <em>askel kerrallaan</em></h2>
+  <div class="weeks-list">
+    <div class="week-row">
+      <div class="week-num">01</div>
+      <div class="week-info">
+        <div class="week-name">Missä olet nyt?</div>
+        <div class="week-desc">Tutustutaan vireystiloihin ja aloitetaan oman hermoston kuunteleminen</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">02</div>
+      <div class="week-info">
+        <div class="week-name">Keho tietää ensin</div>
+        <div class="week-desc">Kehosignaalit — hermosto viestii ennen kuin mieli ehtii tulkita</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">03</div>
+      <div class="week-info">
+        <div class="week-name">Ylivirittyneisyys</div>
+        <div class="week-desc">Tunnista ja laskeudu — käytännön harjoitteet rauhoittumiseen</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">04</div>
+      <div class="week-info">
+        <div class="week-name">Alavirittyneisyys</div>
+        <div class="week-desc">Tunnista ja aktivoi — miten nousta kun keho on lamaantunut</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">05</div>
+      <div class="week-info">
+        <div class="week-name">Säätelyikkuna</div>
+        <div class="week-desc">Piirrä oma karttasi — laukaisijat, palauttajat ja toleranssisi rajat</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">06</div>
+      <div class="week-info">
+        <div class="week-name">Resurssointi</div>
+        <div class="week-desc">Rakenna resurssipankki — mikä kannattelee sinua arjessa</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">07</div>
+      <div class="week-info">
+        <div class="week-name">Arjen rytmitys</div>
+        <div class="week-desc">Säätely rakenteeksi — päiväankkurit ja siirtymät</div>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="week-num">08</div>
+      <div class="week-info">
+        <div class="week-name">Oma polku eteenpäin</div>
+        <div class="week-desc">Koonta ja säätelysuunnitelma — mitä tästä eteenpäin</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HINTA -->
+<section>
+  <p class="section-label">Hinta</p>
+  <h2 class="section-title">Pilottihinta — <em>rajoitettu erä</em></h2>
+  <div class="hinta-box">
+    <p class="hinta-label">Pilottihinta · Kesäkuu 2026</p>
+    <div class="hinta-main">97 €</div>
+    <p class="hinta-orig">Normaalihinta 197 €</p>
+    <p class="hinta-desc">Pilottiin osallistuminen tarkoittaa, että saat valmennuksen puoleen hintaan — vastineeksi toivon sinulta palautetta valmennuksen lopussa.</p>
+    <div class="paikat-wrap">
+      <div class="paikat-dot"></div>
+      <span class="paikat-text">10 paikkaa — ilmoittautumisjärjestyksessä</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MINUSTA -->
+<section>
+  <p class="section-label">Valmentaja</p>
+  <div class="about-section">
+    <div class="about-img-wrap">
+      <!-- Vaihda tähän oma kuva: <img src="kuva.jpg" alt="Katja Saarinen" style="width:100%;height:100%;object-fit:cover;"> -->
+      <div class="about-img-placeholder">🌿</div>
+    </div>
+    <div>
+      <h2 class="section-title" style="font-size:2rem;">Katja Saarinen</h2>
+      <p class="section-label" style="margin-bottom:1rem;">Vakauttamisvalmentaja</p>
+      <div class="section-body">
+        <p>Olen vakauttamisvalmentaja ja psykiatrinen sairaanhoitaja yli 14 vuoden kokemuksella mielenterveyden parissa. Työskentelen kehon ja mielen yhteyden, vireystilan säätelyn ja kehollisen työskentelyn äärellä — sekä yrittäjänä että palkkatyössä.</p>
+        <p>En usko pelkkään puhumiseen. Keho on aina mukana. Tämä valmennus on rakennettu niin, että se vie teorian arkeen — konkreettisesti, toistettavasti, sinun elämääsi sopivaksi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ILMOITTAUDU -->
+<section id="ilmoittaudu">
+  <p class="section-label">Ilmoittautuminen</p>
+  <h2 class="section-title">Varaa paikkasi <em>pilotista</em></h2>
+  <div class="section-body" style="margin-bottom:0;">
+    <p>Täytä lomake ja saat sähköpostiisi laskun. Paikkasi vahvistuu maksun jälkeen — valmennuslinkki lähetetään 1.6.2026 klo 18:00.</p>
+  </div>
+
+  <div class="form-section">
+    <div id="ilmo-form">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Koko nimi *</label>
+          <input type="text" name="nimi" placeholder="Etunimi Sukunimi" required>
+        </div>
+        <div class="form-group">
+          <label>Sähköpostiosoite *</label>
+          <input type="email" name="email" placeholder="sinä@email.fi" required>
+        </div>
+        <div class="form-group">
+          <label>Puhelinnumero *</label>
+          <input type="tel" name="puhelin" placeholder="+358 40 000 0000" required>
+        </div>
+        <div class="form-group full">
+          <label>Katuosoite *</label>
+          <input type="text" name="katuosoite" placeholder="Katuosoite ja numero">
+        </div>
+        <div class="form-group">
+          <label>Postinumero *</label>
+          <input type="text" name="postinumero" placeholder="00100">
+        </div>
+        <div class="form-group">
+          <label>Postitoimipaikka *</label>
+          <input type="text" name="postitoimipaikka" placeholder="Helsinki">
+        </div>
+        <div class="form-group full">
+          <label>Mitä odotat valmennukselta? (vapaaehtoinen)</label>
+          <textarea name="odotukset" placeholder="Voit kertoa vapaasti…"></textarea>
+        </div>
+        <div class="form-group full">
+          <div class="checkbox-wrap">
+            <input type="checkbox" id="osallistun" name="vahvistus" value="Haluan osallistua vakauttavaan digivalmennukseen" required>
+            <label for="osallistun">Haluan osallistua vakauttavaan digivalmennukseen pilottihintaan 97 € ja ymmärrän, että paikkani vahvistuu laskun maksamisen jälkeen.</label>
+          </div>
+        </div>
+      </div>
+      <button class="btn-submit" onclick="lahetaIlmo(event)">Ilmoittaudu pilottiin →</button>
+      <p class="form-note">Saat laskun sähköpostiisi ilmoittautumisen jälkeen. Valmennuslinkki lähetetään 1.6.2026 klo 18:00.</p>
+    </div>
+
+    <div class="form-sent" id="ilmo-sent">
+      <h3>Ilmoittautuminen vastaanotettu 🌿</h3>
+      <p>Kiitos! Saat pian sähköpostiisi laskun. Paikkasi vahvistuu maksun jälkeen.<br>Valmennuslinkki lähetetään sinulle 1.6.2026 klo 18:00.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PERUSTA -->
+<section style="text-align:center;padding:5rem 2rem;">
+  <div style="max-width:600px;margin:0 auto;">
+    <p class="section-label" style="text-align:center;">Miksi tämä valmennus</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,2.75rem);font-weight:400;color:var(--earth);line-height:1.25;margin-bottom:1.5rem;">Vakauttava digivalmennus on<br><em>perusta muutokselle</em></h2>
+    <p style="font-size:16px;font-weight:300;color:var(--text-muted);line-height:1.8;margin-bottom:2.5rem;">Itsesäätely ei ole ominaisuus joka joillain on ja joillain ei. Se on taito — ja taitoja opitaan harjoittelemalla. Tämä valmennus antaa sinulle sen perustan: ymmärryksen omasta hermostostasi ja konkreettiset keinot toimia sen kanssa. Siitä rakentuu toimijuus.</p>
+    <a href="#ilmoittaudu" style="display:inline-block;background:var(--earth);color:var(--sand-light);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.05em;padding:16px 40px;border-radius:50px;text-decoration:none;transition:transform 0.2s;">Ilmoittaudu pilottiin →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>vakauttamisvalmentaja.fi · <a href="mailto:katja@vakauttamisvalmentaja.fi">katja@vakauttamisvalmentaja.fi</a></p>
+</footer>
+
+<script>
+async function lahetaIlmo(e) {
+  e.preventDefault();
+  const btn = document.querySelector('#ilmo-form .btn-submit');
+
+  // Validointi
+  const nimi = document.querySelector('input[name="nimi"]').value.trim();
+  const email = document.querySelector('input[name="email"]').value.trim();
+  const puhelin = document.querySelector('input[name="puhelin"]').value.trim();
+  const katuosoite = document.querySelector('input[name="katuosoite"]').value.trim();
+  const postinumero = document.querySelector('input[name="postinumero"]').value.trim();
+  const postitoimipaikka = document.querySelector('input[name="postitoimipaikka"]').value.trim();
+  const vahvistus = document.querySelector('input[name="vahvistus"]').checked;
+
+  if (!nimi || !email || !puhelin || !katuosoite || !postinumero || !postitoimipaikka || !vahvistus) {
+    alert('Täytä kaikki pakolliset kentät ja hyväksy osallistuminen.');
+    return;
+  }
+
+  btn.textContent = 'Lähetetään…';
+  btn.disabled = true;
+
+  const data = {
+    nimi,
+    email,
+    puhelin,
+    osoite: `${katuosoite}, ${postinumero} ${postitoimipaikka}`,
+    odotukset: document.querySelector('textarea[name="odotukset"]').value.trim(),
+    vahvistus: 'Kyllä — haluaa osallistua vakauttavaan digivalmennukseen pilottihintaan 97 €'
+  };
+
+  // VAIHDA TÄHÄN OMA FORMSPREE-ID (luo uusi lomake Formspreehin)
+  try {
+    const res = await fetch('https://formspree.io/f/VAIHDA_ILMO_ID', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      document.getElementById('ilmo-form').style.display = 'none';
+      document.getElementById('ilmo-sent').classList.add('visible');
+    } else {
+      btn.textContent = 'Lähetys epäonnistui — yritä uudelleen';
+      btn.disabled = false;
+    }
+  } catch(err) {
+    btn.textContent = 'Lähetys epäonnistui — yritä uudelleen';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
